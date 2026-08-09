@@ -2,7 +2,7 @@ import glob, os
 from pathlib import Path
 from importlib import import_module
 
-def get_latest_prompt_version(module_type="agent", module_name="planner"):
+def get_latest_prompt_version(module_type="agent", module_name="decomposer"):
     prompt_folder = os.path.join("src", "prompt_factory", module_type+"_prompts", module_name+"_prompts")
     prompt_files_path = os.path.join(prompt_folder, "*.py")
     prompt_files=glob.glob(prompt_files_path)
@@ -29,7 +29,7 @@ def version_name_standardisation(prompt_version):
     return full_version
 
 
-def get_prompt(prompt_version="", module_type="agent", module_name="planner"):
+def get_prompt(prompt_version="", module_type="agent", module_name="decomposer"):
     try:
         if not prompt_version:
             standardised_prompt_version=get_latest_prompt_version(module_type=module_type, module_name=module_name)
