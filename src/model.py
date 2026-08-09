@@ -23,7 +23,7 @@ API_KEYS=[
     os.environ["MISTRAL_API_KEY_EJ"]
 ]
 
-def get_llm_responce(messages, api_key, model, temperature, structured_output=""):
+def _get_llm_responce(messages, api_key, model, temperature, structured_output=""):
     try:
         llm = ChatMistralAI(
             model=model,
@@ -54,7 +54,7 @@ def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose="", structur
                 return {"status":0, "content":"Max number of trial attempts reached."}
             
             print(f"\nGetting response from {llm_purpose} LLM:: Trial Count: {retry_count+1}")
-            response=get_llm_responce(messages, 
+            response=_get_llm_responce(messages, 
                                       api_key, 
                                       model=model, 
                                       temperature=temperature,
