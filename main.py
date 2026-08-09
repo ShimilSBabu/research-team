@@ -1,9 +1,12 @@
-from src.prompt_factory.prompt_manager import get_prompt
+from src.agents.decomposer_agent import decomposer_node
+from logging import getLogger
+
+logger=getLogger(__name__)
 
 def main():
     print("Hello from research-team!")
-    prompt=get_prompt()
-    print(f"prompt: {prompt}")
+    decomposer_node()
+    # print(f"prompt: {prompt}")
 
 
 if __name__ == "__main__":
