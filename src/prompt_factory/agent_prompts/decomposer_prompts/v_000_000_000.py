@@ -6,3 +6,4 @@ Research query: {query}
 
 Return exactly one list containing sub-topics, each one specific enough to research independently.
 """
+# Return type: Python List

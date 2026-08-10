@@ -12,9 +12,9 @@ from langgraph.graph.message import add_messages
 load_dotenv()
 
 MODELS=[
+        "mistral-small-latest",
         "mistral-medium-latest",
         "mistral-large-latest",
-        "mistral-small-latest"
         ]
 API_KEYS=[
     os.environ["MISTRAL_API_KEY"],

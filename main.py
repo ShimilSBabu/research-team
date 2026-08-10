@@ -13,10 +13,10 @@ def main():
             "query":"Research on current trends in Agentic AI domain."
         }
     state=AgentState(query=user_query)
-    print(f"state\n{state}")
+    # print(f"state\n{state}")
 
-    decomposer_node(state=state)
-    # print(f"prompt: {prompt}")
+    response=decomposer_node(state=state)
+    print(f"response ({type(response["content"])}): {response["content"]}")
 
 
 if __name__ == "__main__":
