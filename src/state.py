@@ -25,16 +25,16 @@ class Citation(BaseModel):
 
 class ResearchResult(BaseModel):
     task:str=Field(description="Task under research", default="")
-    citations:list[Citation]=Field(description="List of individual sources of data for the current task fetched from various URLs.", default_factory=[Citation])
+    citations:list[Citation]=Field(description="List of individual sources of data for the current task fetched from various URLs.", default=[Citation])
     research_status:Literal["COMPLETE", "FAIL"]=Field(description="'COMPLETE' or 'FAIL'", default="FAIL")
-    research_result:str=Field(description="Response formed by combining the data fetched from all citations.")
+    research_result:str=Field(description="Response formed by combining the data fetched from all citations.", default="")
     visited_urls:Annotated[list[str], operator.add]=Field(description="List of URLs visited for this task.", default=[])
     failed_urls:Annotated[list[str], operator.add]=Field(description="List of failed URLs.", default=[]) 
 
 class ResearcherState(BaseModel):
     completed_tasks:list[str]=Field(description="Tasks researched.", default=[])
     pending_tasks:list[str]=Field(description="Remaining tasks to be researched.", default=[])
-    research_results:Annotated[list[ResearchResult], operator.add]=Field(description="Topics researched", default_factory=[ResearchResult])
+    research_results:Annotated[list[ResearchResult], operator.add]=Field(description="Topics researched", default=[ResearchResult])
 
     # research_results:Annotated[dict, merge_dicts]=Field(description="Topics researched", default=)    # topic -> findings text
     # visited_urls:Annotated[list[str], operator.add]=Field(description="", default=)     # dedup memory
@@ -44,13 +44,13 @@ class ResearcherState(BaseModel):
 class FactCheckReport(BaseModel):
     claim:str=Field(description="The claim under investigation", default="")
     source:str=Field(description="The source of the claim.", default="")
-    status:Literal["verified", "unvarified", "contradicted"]
+    status:Literal["verified", "unvarified", "contradicted"]=Field(description="'verified' or 'unvarified' or 'contradicted'", default="unvarified")
     confidence:float=Field(description="A float representation of how much the claim is true.", default=0.0, ge=0.0)
     feedback:str=Field(description="An honest opinion on this claim.", default="")
     reason:str=Field(description="The reason for the confidence score.", default="")
 
 class FactCheckerState(BaseModel):
-    fact_check_results:list=Field(description="List of fact check reports of each claim", default_factory=list[FactCheckReport])
+    fact_check_results:list=Field(description="List of fact check reports of each claim", default=list[FactCheckReport])
     fact_check_log:str=Field(description="Single line report on all fact checks.", default="")
 
 class CriticState(BaseModel):
