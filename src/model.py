@@ -68,6 +68,15 @@ def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose="", structur
             sleep(10)
             retry_count += 1
 
+
+
+# def get_specialized_llm(temperature=0.1, max_retries=3, llm_purpose="Decomposer"):
+#     def modifier(messages, structured_output, temperature, max_retries, llm_purpose):
+#         return call_llm(messages, temperature=temperature, max_retries=max_retries, llm_purpose=llm_purpose, structured_output=structured_output)
+#     return modifier
+
+# decomposer_llm=get_specialized_llm()
+
 class MessagesState(BaseModel):
     messages:Annotated[Sequence[BaseMessage], add_messages]
     intermediate_output:str=""
