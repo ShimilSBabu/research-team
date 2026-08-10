@@ -8,6 +8,9 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, Base
 from langgraph.prebuilt import ToolNode
 from typing import Annotated, Sequence
 from langgraph.graph.message import add_messages
+from logging import getLogger
+
+logger=getLogger(__name__)
 
 load_dotenv()
 
@@ -24,6 +27,7 @@ API_KEYS=[
 ]
 
 def _get_llm_responce(messages, api_key, model, temperature, structured_output=""):
+    logger.debug(msg="Connecting to the LLM.")
     try:
         llm = ChatMistralAI(
             model=model,
@@ -32,28 +36,37 @@ def _get_llm_responce(messages, api_key, model, temperature, structured_output="
             max_tokens=64000
         )
         if structured_output:
+            logger.debug(msg="Equpping the LLM with the required schema.")
             llm = llm.with_structured_output(structured_output)
-            
+
+        logger.debug(msg="Attempting to generate the response.")
         response = llm.invoke(messages)
+        logger.debug(msg="Response generated.")
         return {"status":1,"content":response.content}
     except Exception as e:
+        logger.exception(msg="Response generation failed.")
         return {"status":0,"content":str(e)}
         
 
 def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose="", structured_output=""):
+    logger.info(msg=f"\nGetting LLM response for {llm_purpose}.")
+
     retry_count=0
     response=0
     
     if not messages:
+        logger.warning(msg="Missing 'messages' for the LLM.")
         return {"status":0, "content":"Cannot process empty message."}
     for model in MODELS:
         for api_key in API_KEYS:
             if retry_count==max_retries:
                 if response:
+                    logger.warning(msg=f"Max number of trial attempts reached. Issue;\n{response['content']}")
                     return {"status":0, "content":f"Max number of trial attempts reached. Error\n{response['content']}"}
+                logger.info(msg=f"LLM reached Max number of trial attempts for {llm_purpose}.")
                 return {"status":0, "content":"Max number of trial attempts reached."}
             
-            print(f"\nGetting response from {llm_purpose} LLM:: Trial Count: {retry_count+1}")
+            logger.debug(f"{llm_purpose} LLM Trial Count: {retry_count+1}")
             response=_get_llm_responce(messages, 
                                       api_key, 
                                       model=model, 
@@ -61,11 +74,13 @@ def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose="", structur
                                       structured_output=structured_output
                                       )
             
+            logger.debug(f"LLM Response\n{response}")
             if response["status"]:
+                logger.info(msg="LLM returing the response")
                 return response
             
-            print(f"response: {response}")
-            sleep(10)
+            logger.debug(msg="LLM sleeping for 5 seconds.")
+            sleep(5)
             retry_count += 1
 
 
