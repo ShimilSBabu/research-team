@@ -38,10 +38,14 @@ def _get_llm_responce(messages, api_key, model, temperature, structured_output="
         if structured_output:
             logger.debug(msg="Equpping the LLM with the required schema.")
             llm = llm.with_structured_output(structured_output)
+            logger.debug(msg="Attempting to generate the response with schema.")
+            response = llm.invoke(messages)
+            logger.debug(msg=f"Response ({type(response)}) generated with schema.\n{response}")
+            return {"status":1,"content":response}
 
         logger.debug(msg="Attempting to generate the response.")
         response = llm.invoke(messages)
-        logger.debug(msg="Response generated.")
+        logger.debug(msg=f"Response ({type(response)}) generated.\n{response}")
         return {"status":1,"content":response.content}
     except Exception as e:
         logger.exception(msg="Response generation failed.")
@@ -74,7 +78,6 @@ def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose="", structur
                                       structured_output=structured_output
                                       )
             
-            logger.debug(f"LLM Response\n{response}")
             if response["status"]:
                 logger.info(msg="LLM returing the response")
                 return response
