@@ -1,10 +1,13 @@
 from src.agents.decomposer_agent import decomposer_node
 from src.state import AgentState
+from src.prompt_factory.prompt_manager import get_prompt
+from src.utils import logging_config
 
 from logging import getLogger
 from langgraph.graph import StateGraph
 
 logger=getLogger(__name__)
+logger.info("trial logging..")
 
 def main():
     print("Hello from research-team!")
