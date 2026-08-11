@@ -7,7 +7,6 @@ from logging import getLogger
 from langgraph.graph import StateGraph
 
 logger=getLogger(__name__)
-logger.info("trial logging..")
 
 def main():
     print("Hello from research-team!")

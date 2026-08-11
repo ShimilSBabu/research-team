@@ -5,9 +5,23 @@ import operator
 # def merge_dicts(left:dict, right:dict) -> dict:
 #     """Reducer:shallow-merge two dicts. Used so N parallel researchers can
 #     each contribute `{topic:findings}` without wiping each other out."""
+#     print(f"left\n{left}\nright\n{right}")
 #     merged = dict(left or {})
+#     if "completed_tasks" in merged.keys():
+#         pass
 #     merged.update(right or {})
 #     return merged
+
+def researcherstate__merge(researcherstate_1:ResearcherState, researcherstate_2:dict):
+    merged_researcherstate=researcherstate_1.model_copy(deep=True)
+    if "completed_tasks" in researcherstate_2.keys():
+        merged_researcherstate.completed_tasks=operator.add(merged_researcherstate.completed_tasks, researcherstate_2["completed_tasks"])
+    if "research_results" in researcherstate_2.keys():
+        merged_researcherstate.research_results=operator.add(merged_researcherstate.research_results, researcherstate_2["research_results"])
+    if "failed_tasks" in researcherstate_2.keys():
+        merged_researcherstate.failed_tasks=operator.add(merged_researcherstate.failed_tasks, researcherstate_2["failed_tasks"])    
+    return merged_researcherstate
+
 
 class QueryState(BaseModel):
     query:str=Field(description="User query", default="")
@@ -21,19 +35,18 @@ class Citation(BaseModel):
     url:str=Field(description="URL of research", default="")
     title:str=Field(description="Title of research", default="")
     content:str=Field(description="Content fetched from the URL.", default="")
-    fetch_status:Literal["FETCHED", "FAIL"]=Field(description="'FETCHED' or 'FAIL'", default="FAIL")
 
 class ResearchResult(BaseModel):
     task:str=Field(description="Task under research", default="")
     citations:list[Citation]=Field(description="List of individual sources of data for the current task fetched from various URLs.", default=[Citation])
     research_status:Literal["COMPLETE", "FAIL"]=Field(description="'COMPLETE' or 'FAIL'", default="FAIL")
-    research_result:str=Field(description="Response formed by combining the data fetched from all citations.", default="")
+    websearch_result:str=Field(description="Response formed by combining the data fetched from all citations.", default="")
     visited_urls:Annotated[list[str], operator.add]=Field(description="List of URLs visited for this task.", default=[])
-    failed_urls:Annotated[list[str], operator.add]=Field(description="List of failed URLs.", default=[]) 
+    # failed_urls:Annotated[list[str], operator.add]=Field(description="List of failed URLs.", default=[]) 
 
 class ResearcherState(BaseModel):
-    completed_tasks:list[str]=Field(description="Tasks researched.", default=[])
-    pending_tasks:list[str]=Field(description="Remaining tasks to be researched.", default=[])
+    completed_tasks:Annotated[list[str], operator.add]=Field(description="Tasks researched.", default=[])
+    failed_tasks:Annotated[list[str], operator.add]=Field(description="Remaining tasks to be researched.", default=[])
     research_results:Annotated[list[ResearchResult], operator.add]=Field(description="Topics researched", default=[ResearchResult])
 
     # research_results:Annotated[dict, merge_dicts]=Field(description="Topics researched", default=)    # topic -> findings text
@@ -75,7 +88,7 @@ class AgentState(BaseModel):
     query:QueryState=Field(description="Query from user.", default_factory=QueryState)
 
     decomposer:DecomposerState=Field(default_factory=DecomposerState)
-    researcher:ResearcherState=Field(default_factory=ResearcherState)
+    researcher:Annotated[ResearcherState, researcherstate__merge]=Field(default_factory=ResearcherState)
     fact_checker:FactCheckerState=Field(default_factory=FactCheckerState)
     critic:CriticState=Field(default_factory=CriticState)
     writer:WriterState=Field(default_factory=WriterState)

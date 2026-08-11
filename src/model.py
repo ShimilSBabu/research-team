@@ -26,6 +26,23 @@ API_KEYS=[
     os.environ["MISTRAL_API_KEY_EJ"]
 ]
 
+def get_specialized_llm(temperature, model=MODELS[0], api_key=API_KEYS[0], max_tokens=64000):
+    return ChatMistralAI(
+            model=model,
+            temperature=temperature,
+            api_key=api_key,
+            max_tokens=max_tokens
+        )
+
+decomposer_llm=get_specialized_llm(temperature=0.1)
+researcher_llm=get_specialized_llm(temperature=0.3)
+fact_checker_llm=get_specialized_llm(temperature=0.0)
+writer_llm=get_specialized_llm(temperature=0.5)
+critic_llm=get_specialized_llm(temperature=0.2)
+reviewer_llm=get_specialized_llm(temperature=0.0)
+
+
+# --------------------------------------------------------------------------------------------------------------------------------------
 def _get_llm_responce(messages, api_key, model, temperature, structured_output=""):
     logger.debug(msg="Connecting to the LLM.")
     try:

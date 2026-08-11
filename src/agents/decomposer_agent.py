@@ -19,5 +19,5 @@ def decomposer_node(state:AgentState):
                       structured_output=DecomposerState)
     logger.info(msg=f"Decomposed Task List\n{decomposed_task_list}")
     return {
-        "decomposer":decomposed_task_list
-    }
+        "decomposer": decomposed_task_list["content"]
+        }

@@ -1,0 +1,33 @@
+from src.agents.decomposer_agent import decomposer_node
+from src.agents.researcher_agent import researcher_node
+from src.conditional_edges import dispatch_researchers
+from src.state import AgentState
+
+from langgraph.graph import StateGraph, START, END
+from logging import getLogger
+
+logger=getLogger(__name__)
+
+def build_graph():
+    graph_builder=StateGraph(AgentState)
+
+    # Defining the nodes
+    graph_builder.add_node(node="decomposer", action=decomposer_node)
+    graph_builder.add_node(node="researcher", action=researcher_node)
+
+
+    # Defining the edges
+    graph_builder.add_edge(START, "decomposer")
+    graph_builder.add_conditional_edges(
+        source="decomposer", 
+        path=dispatch_researchers,
+        path_map={
+            "researcher": "researcher"
+        }
+        )
+    graph_builder.add_edge("researcher", END)
+
+    # Compiling the graph
+    graph=graph_builder.compile()
+
+    return graph
