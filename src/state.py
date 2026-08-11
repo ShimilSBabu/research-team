@@ -95,4 +95,4 @@ class AgentState(BaseModel):
     reviewer:WriterState=Field(default_factory=ReviewerState)
 
     human_feedback:list=Field(description="The human feedback.", default="")
-    response:dict=Field(description="Final response to the user.", default_factory=ResponseState)
+    response:ResponseState=Field(description="Final response to the user.", default_factory=ResponseState)

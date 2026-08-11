@@ -8,14 +8,14 @@ import json
 
 logger=getLogger(__name__)
 
-def researcher_node(state:dict):
+async def researcher_node(state:dict):
     logger.info(msg="Initializing researcher node.")
     try:
         research_topic=state["research_topic"]
         research_sub_topic=state["research_sub_topic"]
         logger.info(msg=f"Research topic: {research_topic}\nResearch sub-topic: {research_sub_topic}")
 
-        web_results=web_search.run(query=f"{research_sub_topic} with respect to {research_topic}")
+        web_results=await web_search.run(query=f"{research_sub_topic} with respect to {research_topic}")
         logger.debug(msg=f"Received web results for sub-topic: {research_sub_topic!a}.")
 
         visited_urls_list=[]
@@ -39,7 +39,7 @@ def researcher_node(state:dict):
                     ),
                     HumanMessage(content=f"Findings\n {json.dumps(citations_list)}")
                 ]
-        concise_web_results=call_llm(messages, llm_purpose="Researcher Agent")
+        concise_web_results=await call_llm(messages, llm_purpose="Researcher Agent")
         if not concise_web_results["status"]:
             logger.error(msg="LLM failed to provide concise web results.")
             raise ValueError("LLM failed to provide concise web results.")

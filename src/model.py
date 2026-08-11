@@ -43,7 +43,7 @@ reviewer_llm=get_specialized_llm(temperature=0.0)
 
 
 # --------------------------------------------------------------------------------------------------------------------------------------
-def _get_llm_responce(messages, api_key, model, temperature, structured_output=""):
+async def _get_llm_responce(messages, api_key, model, temperature, structured_output=""):
     logger.debug(msg="Connecting to the LLM.")
     try:
         llm = ChatMistralAI(
@@ -56,12 +56,12 @@ def _get_llm_responce(messages, api_key, model, temperature, structured_output="
             logger.debug(msg="Equpping the LLM with the required schema.")
             llm = llm.with_structured_output(structured_output)
             logger.debug(msg="Attempting to generate the response with schema.")
-            response = llm.invoke(messages)
+            response = await llm.ainvoke(messages)
             logger.debug(msg=f"Response ({type(response)}) generated with schema.\n{response}")
             return {"status":1,"content":response}
 
         logger.debug(msg="Attempting to generate the response.")
-        response = llm.invoke(messages)
+        response = await llm.ainvoke(messages)
         logger.debug(msg=f"Response ({type(response)}) generated.\n{response}")
         return {"status":1,"content":response.content}
     except Exception as e:
@@ -69,7 +69,7 @@ def _get_llm_responce(messages, api_key, model, temperature, structured_output="
         return {"status":0,"content":str(e)}
         
 
-def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose="", structured_output=""):
+async def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose="", structured_output=""):
     logger.info(msg=f"\nGetting LLM response for {llm_purpose}.")
 
     retry_count=0
@@ -88,7 +88,7 @@ def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose="", structur
                 return {"status":0, "content":"Max number of trial attempts reached."}
             
             logger.debug(f"{llm_purpose} LLM Trial Count: {retry_count+1}")
-            response=_get_llm_responce(messages, 
+            response=await _get_llm_responce(messages, 
                                       api_key, 
                                       model=model, 
                                       temperature=temperature,
