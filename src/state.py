@@ -73,16 +73,15 @@ class FactCheckLog(BaseModel):
 class FactCheckerState(BaseModel):
     fact_check_results:list[FactCheckReport]=Field(description="List of fact check reports of each claim", default=[])
     fact_check_log:FactCheckLog=Field(description="Log report of the entire fact check.", default_factory=FactCheckLog)
-    # fact_check_log:str=Field(description="Single line report on all fact checks.", default="")
+
+class WriterState(BaseModel):
+    draft_research_report:str=Field(description="Draft report of the current research.", default="")
 
 class CriticState(BaseModel):
     critic_feedback:list[str]=Field(description="List of logical feedback on each claim", default=[])
     critic_score:float=Field(description="Score within the range of 0.00-1.00 to represent the overall quality of the report.", default=0.00, ge=0.00, le=1.00)
     critic_iteration_count:int=Field(description="Number of times the critic was called for the current report.", default=0)
     critic_max_iteration:int=Field(description="Max allowed count for which the critic could be called for this report.", default=3)
-
-class WriterState(BaseModel):
-    draft_research_report:str=Field(description="Draft report of the current research.", default="")
 
 class ReviewerState(BaseModel):
     review_result:Literal["PASS", "FAIL"]=Field(description="'PASS' or 'FAIL'", default="FAIL")
