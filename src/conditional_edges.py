@@ -24,12 +24,8 @@ def critic_decision(state:AgentState):
     if critic_score < 0.5:
         if state.critic.critic_iteration_count >= state.critic.critic_max_iteration:
             logger.info(msg=f"Low citic score: {critic_score}/1.00. Proceeding forward as critic reached maximum iteration limit.")
-            state.response.content=state.writer.draft_research_report
-            state.response.status=True
             return "proceed"
         logger.info(msg=f"Low citic score: {critic_score}/1.00. Rewriting.")
         return "rewrite"
     logger.info(msg=f"Good critic score: {critic_score}/1.00. Proceeding to final review.")
-    state.response.content=state.writer.draft_research_report
-    state.response.status=True
     return "proceed"

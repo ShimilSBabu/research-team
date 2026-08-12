@@ -3,6 +3,7 @@ from src.agents.researcher_agent import researcher_node
 from src.agents.fact_checker_agent import fact_checker_node
 from src.agents.writer_agent import writer_node
 from src.agents.critic_agent import critic_node
+from src.agents.display_agent import display_node
 from src.conditional_edges import dispatch_researchers, critic_decision
 from src.state import AgentState
 
@@ -20,6 +21,7 @@ def build_graph():
     graph_builder.add_node(node="fact_checker", action=fact_checker_node)
     graph_builder.add_node(node="writer", action=writer_node)
     graph_builder.add_node(node="critic", action=critic_node)
+    graph_builder.add_node(node="display", action=display_node)
 
 
     # Defining the edges
@@ -39,10 +41,10 @@ def build_graph():
         path=critic_decision,
         path_map={
             "rewrite":"writer",
-            "proceed":END
+            "proceed":"display"
         }
     )
-    # graph_builder.add_edge("critic", END)
+    graph_builder.add_edge("display", END)
 
     # Compiling the graph
     graph=graph_builder.compile()
