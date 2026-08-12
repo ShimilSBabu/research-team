@@ -11,12 +11,13 @@ logger=getLogger(__name__)
 async def researcher_node(state:dict):
     logger.info(msg="Initializing researcher node.")
     try:
+        researcher_id=state["researcher_id"]
         research_topic=state["research_topic"]
         research_sub_topic=state["research_sub_topic"]
-        logger.info(msg=f"Research topic: {research_topic}\nResearch sub-topic: {research_sub_topic}")
+        logger.info(msg=f"Researcher [{researcher_id}] => Research topic : {research_topic}\nResearch sub-topic: {research_sub_topic}")
 
         web_results=await web_search.run(query=f"{research_sub_topic} with respect to {research_topic}")
-        logger.debug(msg=f"Received web results for sub-topic: {research_sub_topic!a}.")
+        logger.debug(msg=f"Researcher [{researcher_id}] => Received web results for sub-topic: {research_sub_topic!a}.")
 
         visited_urls_list=[]
         citations_list=[]
@@ -28,7 +29,7 @@ async def researcher_node(state:dict):
             }
             citations_list.append(citation)
             visited_urls_list.append(result["url"])
-        logger.debug(msg=f"Citations generated for sub-topic: {research_sub_topic!a}.")
+        logger.debug(msg=f"Researcher [{researcher_id}] => Citations generated for sub-topic: {research_sub_topic!a}.")
 
         researcher_system_prompt=get_prompt(module_type="agent", module_name="researcher")
         messages=[
@@ -39,11 +40,12 @@ async def researcher_node(state:dict):
                     ),
                     HumanMessage(content=f"Findings\n {json.dumps(citations_list)}")
                 ]
+        logger.info(msg=f"Researcher [{researcher_id}] => Researching: {research_sub_topic}")
         concise_web_results=await call_llm(messages, llm_purpose="Researcher Agent")
         if not concise_web_results["status"]:
-            logger.error(msg="LLM failed to provide concise web results.")
-            raise ValueError("LLM failed to provide concise web results.")
-        logger.info(msg=f"consise web results created for sub-topic: {research_sub_topic!a}.")
+            logger.error(msg=f"Researcher [{researcher_id}] => LLM failed to provide concise web results for sub-topic: {research_sub_topic!a}.")
+            raise ValueError(f"Researcher [{researcher_id}] => LLM failed to provide concise web results for sub-topic: {research_sub_topic!a}.")
+        logger.info(msg=f"Researcher [{researcher_id}] => consise web results created for sub-topic: {research_sub_topic!a}.")
         research_result={
             "task":web_results["content"]["query"],
             "citations":citations_list,
@@ -51,7 +53,7 @@ async def researcher_node(state:dict):
             "websearch_result":concise_web_results["content"]
         }
 
-        logger.info(msg=f"Research successful for sub-topic: {research_sub_topic!a}.\nresearch_result\n{research_result}")
+        logger.info(msg=f"Researcher [{researcher_id}] => Research successful for sub-topic: {research_sub_topic!a}.\nresearch_result\n{research_result}")
         return {
             "researcher":{
                 "completed_tasks":[research_sub_topic],
@@ -59,7 +61,7 @@ async def researcher_node(state:dict):
             }
         }
     except:
-        logger.exception(msg=f"Research failed for sub-topic: {research_sub_topic!a}.")
+        logger.exception(msg=f"Researcher [{researcher_id}] => Research failed for sub-topic: {research_sub_topic!a}.")
         return {
                 "researcher":{
                     "failed_tasks":[research_sub_topic]

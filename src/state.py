@@ -47,7 +47,7 @@ class ResearchResult(BaseModel):
 class ResearcherState(BaseModel):
     completed_tasks:Annotated[list[str], operator.add]=Field(description="Tasks researched.", default=[])
     failed_tasks:Annotated[list[str], operator.add]=Field(description="Remaining tasks to be researched.", default=[])
-    research_results:Annotated[list[ResearchResult], operator.add]=Field(description="Topics researched", default=[ResearchResult])
+    research_results:Annotated[list[ResearchResult], operator.add]=Field(description="Topics researched", default=[])
 
     # research_results:Annotated[dict, merge_dicts]=Field(description="Topics researched", default=)    # topic -> findings text
     # visited_urls:Annotated[list[str], operator.add]=Field(description="", default=)     # dedup memory
@@ -57,18 +57,27 @@ class ResearcherState(BaseModel):
 class FactCheckReport(BaseModel):
     claim:str=Field(description="The claim under investigation", default="")
     source:str=Field(description="The source of the claim.", default="")
-    status:Literal["verified", "unvarified", "contradicted"]=Field(description="'verified' or 'unvarified' or 'contradicted'", default="unvarified")
-    confidence:float=Field(description="A float representation of how much the claim is true.", default=0.0, ge=0.0)
+    status:Literal["VERIFIED", "REJECTED", "UNVERIFIED", "CONTRADICTED" ]=Field(description="'VERIFIED' or 'REJECTED' or 'UNVERIFIED' or 'CONTRADICTED'", default="UNVERIFIED")
+    confidence:float=Field(description="A float score between 0.00 and 1.00 representing how much the claim is true.", default=0.00, ge=0.00, le=1.00)
     feedback:str=Field(description="An honest opinion on this claim.", default="")
     reason:str=Field(description="The reason for the confidence score.", default="")
 
+class FactCheckLog(BaseModel):
+    total_claims_checked:int=Field(description="Total number of claims fact checked.", default=0)
+    total_verified_claims:int=Field(description="Total number of VERIFIED claims found.", default=0)
+    total_rejected_claims:int=Field(description="Total number of REJECTED claims found.", default=0)
+    total_unverified_claims:int=Field(description="Total number of UNVERIFIED claims found.", default=0)
+    total_contradicted_claims:int=Field(description="Total number of CONTRADICTED claims found.", default=0)
+    single_line_log:str=Field(description="Single line report on all fact checks.", default="")
+
 class FactCheckerState(BaseModel):
-    fact_check_results:list=Field(description="List of fact check reports of each claim", default=list[FactCheckReport])
-    fact_check_log:str=Field(description="Single line report on all fact checks.", default="")
+    fact_check_results:list[FactCheckReport]=Field(description="List of fact check reports of each claim", default=[])
+    fact_check_log:FactCheckLog=Field(description="Log report of the entire fact check.", default_factory=FactCheckLog)
+    # fact_check_log:str=Field(description="Single line report on all fact checks.", default="")
 
 class CriticState(BaseModel):
     critic_feedback:list[str]=Field(description="List of logical feedback on each claim", default=[])
-    critic_score:float=Field(description="Score within the range of 0.0-1.0 to represent the overall quality of the report.", default=0.0, ge=0.0, le=1.0, decimal_places=2)
+    critic_score:float=Field(description="Score within the range of 0.00-1.00 to represent the overall quality of the report.", default=0.00, ge=0.00, le=1.00)
     critic_iteration_count:int=Field(description="Number of times the critic was called for the current report.", default=0)
     critic_max_iteration:int=Field(description="Max allowed count for which the critic could be called for this report.", default=3)
 
