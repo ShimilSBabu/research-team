@@ -1,17 +1,23 @@
 from src.graph import build_graph
 from src.utils import logging_config
 
-import asyncio
+from fastapi import FastAPI
+import uvicorn
 from logging import getLogger
 
 logger=getLogger(__name__)
+app=FastAPI()
 
-async def main():
+@app.get(path="/research")
+async def main(research_topic:str=""):
+    if not research_topic:
+        return {
+                "status": False, 
+                "content":"Please enter an input for research."
+            }
     logger.info(msg="Research team warming up.")
     graph=build_graph()
-    logger.info(msg="Warmed up successfully. Waiting for user query.")
-    # research_topic=input("Enter the research topic: ")
-    research_topic="Research on current trends in Agentic AI domain."
+    logger.info(msg=f"Warmed up successfully.\nUser query: {research_topic}")
     initial_state={
         "query":{
             "query": research_topic
@@ -34,4 +40,10 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    uvicorn.run(
+        app="main:app",
+        host="127.0.0.1",
+        port=8080,
+        use_colors=True,
+        reload=True
+    )

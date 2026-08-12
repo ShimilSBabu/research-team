@@ -26,7 +26,7 @@ API_KEYS=[
     # os.environ["MISTRAL_API_KEY_PM"],
 ]
 
-def get_specialized_llm(temperature, model=MODELS[0], api_key=API_KEYS[0], max_tokens=64000):
+def get_specialized_llm(temperature, model=MODELS[0], api_key=API_KEYS[0], max_tokens=200000):
     return ChatMistralAI(
             model=model,
             temperature=temperature,
