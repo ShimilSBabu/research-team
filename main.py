@@ -23,14 +23,14 @@ async def main():
     logger.info(msg="Research finished.")
     print(f"updated_state\n{updated_state}")
 
-    # status=updated_state["response"]["status"]
-    # if status:
-    #     content=updated_state["response"]["content"]
+    status=updated_state["response"]["status"]
+    content=updated_state["response"]["content"]
+    logger.info(f"Final response.\n{content}")
 
-    # return {
-    #     "status": status, 
-    #     "content":content if content else "Please try again."
-    #     }
+    return {
+        "status": status, 
+        "content":content if content else "Please try again."
+        }
 
 
 if __name__ == "__main__":
