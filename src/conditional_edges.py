@@ -1,5 +1,5 @@
 from src.state import AgentState
-
+# from 
 from langgraph.types import Send
 from logging import getLogger
 logger=getLogger(__name__)
@@ -15,3 +15,17 @@ def dispatch_researchers(state:AgentState):
     task_list = [Send(node="researcher", arg=research_topic_element) for research_topic_element in research_topics_list]
     logger.info(msg=f"Dispatching {len(task_list)} researchers.")
     return task_list
+
+
+def critic_decision(state:AgentState):
+    logger.info(msg="Critic deciding.")
+    critic_score=state.critic.critic_report.critic_score
+    logger.info(msg="Considering critic score.")
+    if critic_score < 0.5:
+        if state.critic.critic_iteration_count >= state.critic.critic_max_iteration:
+            logger.info(msg=f"Low citic score: {critic_score}/1.00. Proceeding forward as critic reached maximum iteration limit.")
+            return "proceed"
+        logger.info(msg=f"Low citic score: {critic_score}/1.00. Rewriting.")
+        return "rewrite"
+    logger.info(msg=f"Good critic score: {critic_score}/1.00. Proceeding to final review.")
+    return "proceed"

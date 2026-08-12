@@ -20,7 +20,7 @@ async def writer_node(state:AgentState):
     logger.info(msg="Collecting the fact check report.")
     fact_check_report=json.dumps(state.fact_checker.model_dump()["fact_check_results"])
     logger.info(msg="Checking for critic feedback.")
-    critic_feedback=state.critic.critic_feedback
+    critic_feedback=state.critic.critic_report.critic_feedback
     logger.info("Setting up the writer.")
     writer_system_prompt=get_prompt(module_type="agent", module_name="writer")
     writer_system_prompt=writer_system_prompt["content"].format(research_topic=research_topic, research_report=research_report, fact_check_report=fact_check_report, critic_feedback=critic_feedback)

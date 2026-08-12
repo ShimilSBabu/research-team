@@ -77,9 +77,12 @@ class FactCheckerState(BaseModel):
 class WriterState(BaseModel):
     draft_research_report:str=Field(description="Draft report of the current research.", default="")
 
-class CriticState(BaseModel):
-    critic_feedback:list[str]=Field(description="List of logical feedback on each claim", default=[])
+class CriticReport(BaseModel):
+    critic_feedback:str=Field(description="List of logical feedback on each claim", default="")
     critic_score:float=Field(description="Score within the range of 0.00-1.00 to represent the overall quality of the report.", default=0.00, ge=0.00, le=1.00)
+
+class CriticState(BaseModel):
+    critic_report:CriticReport=Field(description="Report from critic on the quality of draft research report.", default_factory=CriticReport)
     critic_iteration_count:int=Field(description="Number of times the critic was called for the current report.", default=0)
     critic_max_iteration:int=Field(description="Max allowed count for which the critic could be called for this report.", default=3)
 

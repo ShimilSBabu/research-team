@@ -20,10 +20,10 @@ MODELS=[
         "mistral-large-latest",
         ]
 API_KEYS=[
-    os.environ["MISTRAL_API_KEY"],
+    os.environ["MISTRAL_API_KEY_EJ"],
     os.environ["MISTRAL_AUTONOMOUS_API_KEY"],
+    os.environ["MISTRAL_API_KEY"],
     # os.environ["MISTRAL_API_KEY_PM"],
-    os.environ["MISTRAL_API_KEY_EJ"]
 ]
 
 def get_specialized_llm(temperature, model=MODELS[0], api_key=API_KEYS[0], max_tokens=64000):
