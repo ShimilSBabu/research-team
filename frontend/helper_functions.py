@@ -247,9 +247,8 @@ SCOPES = [
 
 
 def get_gmail_service(
-    credentials_file: str = r"frontend\credentials.json",
-    # credentials_file: str = os.getenv("GMAIL_CREDENTIALS_PATH"),
-    token_file: str = r"frontend\token.json",
+    credentials_file: str = os.getenv("GMAIL_CREDENTIALS_PATH", os.path.join("frontend", "credentials.json")),
+    token_file: str = os.getenv("GMAIL_TOKEN_PATH", os.path.join("frontend", "token.json"))
 ):
     creds = None
 
