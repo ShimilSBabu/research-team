@@ -41,6 +41,8 @@ async def main(research_topic:str=""):
 
 if __name__ == "__main__":
     import os
+    from dotenv import load_dotenv
+    load_dotenv()
     uvicorn.run(
         app="main:app",
         host=os.getenv("FASTAPI_HOST", "0.0.0.0"),
