@@ -69,6 +69,7 @@ if st.session_state.show_buttons:
 
     with column_3:
         if st.button(label="Send Email", width="stretch"):
+            print(f'os.getenv("RECEIVER_EMAIL_ID") ({type(os.getenv("RECEIVER_EMAIL_ID"))}): {os.getenv("RECEIVER_EMAIL_ID")}')
             message_id=send_pdf_email(
                     pdf_bytes=st.session_state.pdf_bytes,
                     recipient=os.getenv("RECEIVER_EMAIL_ID"),
