@@ -30,6 +30,9 @@ Write a professional research report (in markdown format) solely based on the RE
     - A "Fact-Check Notes" section listing any claims marked 'VERIFIED', 'REJECTED', 'UNVERIFIED' or 'CONTRADICTED'.
     - A "Sources" section listing the cited URLs.
 
+# CONSTRAINT
+The word count of research report must be between 10000 and 15000.
+
 
 {critic_feedback}
 """
