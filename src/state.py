@@ -84,7 +84,7 @@ class CriticReport(BaseModel):
 class CriticState(BaseModel):
     critic_report:CriticReport=Field(description="Report from critic on the quality of draft research report.", default_factory=CriticReport)
     critic_iteration_count:int=Field(description="Number of times the critic was called for the current report.", default=0)
-    critic_max_iteration:int=Field(description="Max allowed count for which the critic could be called for this report.", default=3)
+    critic_max_iteration:int=Field(description="Max allowed count for which the critic could be called for this report.", default=1)
 
 class ReviewerState(BaseModel):
     review_result:Literal["PASS", "FAIL"]=Field(description="'PASS' or 'FAIL'", default="FAIL")

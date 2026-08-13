@@ -24,7 +24,7 @@ async def fact_checker_node(state:AgentState):
         HumanMessage(content=combined_research_results)
     ]
     logger.info(msg="Fact checking.")
-    response=await call_llm(messages=messages, structured_output=FactCheckerState)
+    response=await call_llm(messages=messages, structured_output=FactCheckerState, llm_purpose="Critic")
     fact_check_report=response["content"]
     if response["status"]:
         logger.info(msg=f"Fact check successful. Fact Check Report\n{fact_check_report}")

@@ -11,4 +11,4 @@ if st.button(label="Research", width="stretch", type="primary"):
     response=requests.get(
         url=f"{host}:{port}/research?research_topic={user_input}"
     )
-    st.write(response.json()["content"])
+    st.markdown(response.json()["content"])

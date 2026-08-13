@@ -25,8 +25,11 @@ async def critic_node(state:AgentState):
     critic_response=await call_llm(messages=messages, structured_output=CriticReport, llm_purpose="Critic")
     logger.info(msg=f"Critic report generated.\n{critic_response["content"]}")
     return {
-        "critic": {
-            "critic_report": critic_response["content"],
+        "critic":{
+            "critic_report": {
+                "critic_feedback":critic_response["content"].critic_feedback,
+                "critic_score":critic_response["content"].critic_score
+            },
             "critic_iteration_count": critic_iteration_count+1
-        }
+        },
     }

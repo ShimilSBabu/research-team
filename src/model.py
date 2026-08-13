@@ -69,7 +69,7 @@ async def _get_llm_responce(messages, api_key, model, temperature, structured_ou
         return {"status":0,"content":str(e)}
         
 
-async def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose="", structured_output=""):
+async def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose=__name__, structured_output=""):
     logger.info(msg=f"\nGetting LLM response for {llm_purpose}.")
 
     retry_count=0
