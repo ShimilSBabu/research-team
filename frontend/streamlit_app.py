@@ -18,7 +18,8 @@ st.title("The Agentic Research Team")
 if "show_markdown" not in st.session_state:
     st.session_state.show_markdown = False
 if "show_buttons" not in st.session_state:
-    st.session_state.show_buttons = False
+    # st.session_state.show_buttons = False
+    st.session_state.show_buttons = True
 if "markdown_text" not in st.session_state:
     # st.session_state.markdown_text = False
     st.session_state.markdown_text = """- **Overreliance on Industry Reports and Blogs**: While the report cites a range of sources, many of them are industry blogs or reports (e.g., Tredence, AIMultiple, DruidAI) rather than peer-reviewed academic research. This reliance on non-academic sources weakens the report's credibility. The report should incorporate more peer-reviewed studies or independent analyses to balance the narrative.
