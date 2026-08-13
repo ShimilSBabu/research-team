@@ -31,7 +31,7 @@ if st.button(label="Research", width="stretch", type="primary"):
     st.session_state.show_markdown = False
 
     response=requests.get(
-        url=f"{host}:{port}/research?research_topic={user_input}"
+        url=f"{host}research?research_topic={user_input}"
     )
     st.session_state.show_buttons = True
     st.session_state.markdown_text=(response.json()["content"])
