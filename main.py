@@ -42,8 +42,8 @@ async def main(research_topic:str=""):
 if __name__ == "__main__":
     uvicorn.run(
         app="main:app",
-        host="127.0.0.1",
-        port=8080,
-        use_colors=True,
-        reload=True
+        # host="127.0.0.1",
+        # port=8080,
+        # use_colors=True,
+        # reload=True
     )
