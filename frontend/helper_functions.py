@@ -17,6 +17,10 @@ from reportlab.platypus import (
 )
 
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 def markdown_to_pdf(markdown_text: str) -> bytes:
     """
     Convert Markdown text to PDF bytes without creating
