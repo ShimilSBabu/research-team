@@ -201,3 +201,125 @@ def markdown_to_pdf(markdown_text: str) -> bytes:
     doc.build(story)
 
     return buffer.getvalue()
+
+
+# import os
+# import base64
+# import resend
+
+
+# def send_pdf_email(
+#     pdf_bytes: bytes,
+#     recipient: str,
+#     subject: str,
+#     body: str,
+#     filename: str = "document.pdf",
+# ):
+#     resend.api_key = os.getenv("RESEND_API_KEY")
+
+#     resend.Emails.send({
+#         "from": os.getenv("SENDER_EMAIL_ID"),
+#         "to": [recipient],
+#         "subject": subject,
+#         "text": body,
+#         "attachments": [
+#             {
+#                 "filename": filename,
+#                 "content": base64.b64encode(pdf_bytes).decode("utf-8"),
+#             }
+#         ],
+#     })
+
+import os
+import base64
+from email.message import EmailMessage
+from pathlib import Path
+
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+
+
+SCOPES = [
+    "https://www.googleapis.com/auth/gmail.send"
+]
+
+
+def get_gmail_service(
+    credentials_file: str = r"frontend\credentials.json",
+    # credentials_file: str = os.getenv("GMAIL_CREDENTIALS_PATH"),
+    token_file: str = r"frontend\token.json",
+):
+    creds = None
+
+    # Existing OAuth token
+    if Path(token_file).exists():
+        creds = Credentials.from_authorized_user_file(
+            token_file,
+            SCOPES,
+        )
+
+    # Refresh existing token
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+
+    # First-time authorization
+    elif not creds or not creds.valid:
+        flow = InstalledAppFlow.from_client_secrets_file(
+            credentials_file,
+            SCOPES,
+        )
+
+        creds = flow.run_local_server(port=0)
+
+        Path(token_file).write_text(
+            creds.to_json(),
+            encoding="utf-8",
+        )
+
+    return build(
+        "gmail",
+        "v1",
+        credentials=creds,
+    )
+
+
+def send_pdf_email(
+    pdf_bytes: bytes,
+    recipient: str,
+    subject: str,
+    body: str,
+    filename: str = "document.pdf",
+):
+    service = get_gmail_service()
+
+    message = EmailMessage()
+
+    message["To"] = recipient
+    message["Subject"] = subject
+
+    message.set_content(body)
+
+    message.add_attachment(
+        pdf_bytes,
+        maintype="application",
+        subtype="pdf",
+        filename=filename,
+    )
+
+    encoded_message = base64.urlsafe_b64encode(
+        message.as_bytes()
+    ).decode("utf-8")
+
+    response = (
+        service.users()
+        .messages()
+        .send(
+            userId="me",
+            body={"raw": encoded_message},
+        )
+        .execute()
+    )
+
+    return response["id"]

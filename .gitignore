@@ -225,3 +225,5 @@ trial.*
 logs
 logs/*
 *.ipynb
+*/credentials.json
+*/token.json
