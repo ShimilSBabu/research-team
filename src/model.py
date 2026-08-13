@@ -98,10 +98,9 @@ async def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose=__name
             if response["status"]:
                 logger.info(msg="LLM returing the response")
                 return response
-            
-            logger.debug(msg="LLM sleeping for 5 seconds.")
-            sleep(5)
             retry_count += 1
+        logger.debug(msg="LLM sleeping for 5 seconds.")
+        sleep(5)
 
 
 
