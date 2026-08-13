@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Annotated, Literal
 import operator
 
-from utils.config import CRITIC_MAX_ITERATION
+from src.utils.config import CRITIC_MAX_ITERATION
 
 # def merge_dicts(left:dict, right:dict) -> dict:
 #     """Reducer:shallow-merge two dicts. Used so N parallel researchers can
