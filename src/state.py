@@ -2,6 +2,8 @@ from pydantic import BaseModel, Field
 from typing import Annotated, Literal
 import operator
 
+from utils.config import CRITIC_MAX_ITERATION
+
 # def merge_dicts(left:dict, right:dict) -> dict:
 #     """Reducer:shallow-merge two dicts. Used so N parallel researchers can
 #     each contribute `{topic:findings}` without wiping each other out."""
@@ -84,7 +86,7 @@ class CriticReport(BaseModel):
 class CriticState(BaseModel):
     critic_report:CriticReport=Field(description="Report from critic on the quality of draft research report.", default_factory=CriticReport)
     critic_iteration_count:int=Field(description="Number of times the critic was called for the current report.", default=0)
-    critic_max_iteration:int=Field(description="Max allowed count for which the critic could be called for this report.", default=1)
+    critic_max_iteration:int=Field(description="Max allowed count for which the critic could be called for this report.", default=CRITIC_MAX_ITERATION)
 
 class ReviewerState(BaseModel):
     review_result:Literal["PASS", "FAIL"]=Field(description="'PASS' or 'FAIL'", default="FAIL")

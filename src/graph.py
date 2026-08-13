@@ -37,7 +37,7 @@ def build_graph():
     graph_builder.add_edge("fact_checker", "writer")
     graph_builder.add_edge("writer", "critic")
     graph_builder.add_conditional_edges(
-        source="writer",
+        source="critic",
         path=critic_decision,
         path_map={
             "rewrite":"writer",

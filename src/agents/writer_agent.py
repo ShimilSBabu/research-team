@@ -29,7 +29,7 @@ async def writer_node(state:AgentState):
         HumanMessage(content="Prepare a professional research report.")
     ]
     logger.info(msg="Writing the draft report.")
-    draft_report=await call_llm(messages=messages, structured_output=WriterState)
+    draft_report=await call_llm(messages=messages, structured_output=WriterState, temperature=0.5, llm_purpose="Writer Agent")
     logger.info(msg=f"Draft report generated.\n{draft_report["content"]}")
 
     return {

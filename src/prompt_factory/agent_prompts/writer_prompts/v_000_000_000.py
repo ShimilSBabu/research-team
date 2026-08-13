@@ -27,12 +27,12 @@ An analysis report on the claims in RESEARCH FINDINGS REPORT.
 Write a professional research report (in markdown format) solely based on the RESEARCH FINDINGS REPORT and FACT CHECK REPORT (and critic feedback, if any) in formal tone. The research report must contain:
     - A short Executive Summary.
     - One section per subtopic.
-    - A "Fact-Check Notes" section listing any claims marked 'VERIFIED', 'REJECTED', 'UNVERIFIED' or 'CONTRADICTED'.
-    - A "Sources" section listing the cited URLs.
+    - A "Fact-Check Notes" section listing any claims marked 'VERIFIED', 'REJECTED', 'UNVERIFIED' or 'CONTRADICTED', with the width of an A4 page.
+    - A "Sources" section at the end of the page, listing all the cited URLs.
 
 # CONSTRAINT
 The word count of research report must be between 10000 and 15000.
-
+Adjust the width of "Fact-Check Notes" as it must fit the width of an A4 page.
 
 {critic_feedback}
 """

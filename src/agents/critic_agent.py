@@ -22,7 +22,7 @@ async def critic_node(state:AgentState):
         HumanMessage(content=draft_report)
     ]
     logger.info(msg="Generating critic report.")
-    critic_response=await call_llm(messages=messages, structured_output=CriticReport, llm_purpose="Critic")
+    critic_response=await call_llm(messages=messages, structured_output=CriticReport, llm_purpose="Critic Agent", temperature=0.0)
     logger.info(msg=f"Critic report generated.\n{critic_response["content"]}")
     return {
         "critic":{

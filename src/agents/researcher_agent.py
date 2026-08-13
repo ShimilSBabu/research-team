@@ -41,7 +41,7 @@ async def researcher_node(state:dict):
                     HumanMessage(content=f"Findings\n {json.dumps(citations_list)}")
                 ]
         logger.info(msg=f"Researcher [{researcher_id}] => Researching: {research_sub_topic}")
-        concise_web_results=await call_llm(messages, llm_purpose="Researcher Agent")
+        concise_web_results=await call_llm(messages, llm_purpose="Researcher Agent", temperature=0.2)
         if not concise_web_results["status"]:
             logger.error(msg=f"Researcher [{researcher_id}] => LLM failed to provide concise web results for sub-topic: {research_sub_topic!a}.")
             raise ValueError(f"Researcher [{researcher_id}] => LLM failed to provide concise web results for sub-topic: {research_sub_topic!a}.")

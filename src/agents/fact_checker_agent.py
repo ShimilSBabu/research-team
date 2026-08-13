@@ -10,7 +10,7 @@ logger=getLogger(__name__)
 async def fact_checker_node(state:AgentState):
     logger.info(msg="Initializing Fact checker node.")
     user_query=state.query.query
-    fact_checker_system_prompt=get_prompt(module_type="agent", module_name="fact_checker")
+    fact_checker_system_prompt=get_prompt(module_type="agent", module_name="Fact Checker ")
     fact_checker_system_prompt=fact_checker_system_prompt["content"].format(query=user_query)
     logger.info(msg="Setting up the fact checker.")
     research_results_list=[]
@@ -24,7 +24,7 @@ async def fact_checker_node(state:AgentState):
         HumanMessage(content=combined_research_results)
     ]
     logger.info(msg="Fact checking.")
-    response=await call_llm(messages=messages, structured_output=FactCheckerState, llm_purpose="Critic")
+    response=await call_llm(messages=messages, structured_output=FactCheckerState, llm_purpose="Fact Checker Agent", temperature=0.0)
     fact_check_report=response["content"]
     if response["status"]:
         logger.info(msg=f"Fact check successful. Fact Check Report\n{fact_check_report}")
