@@ -32,7 +32,9 @@ Write a professional research report (in markdown format) solely based on the RE
 
 # CONSTRAINT
 The word count of research report must be between 10000 and 15000.
-Adjust the width of "Fact-Check Notes" as it must fit the width of an A4 page.
+Adjust the width of "Fact-Check Notes" as it must fit the width of an A4 page. So:
+    1) Text of each cell must be multi-lined (by adding newline (\\n) characters) if their length (width) is more than 3 cm.
+    2) Each cell must only have atmost 3 cm width. Height can vary.
 
 {critic_feedback}
 """
