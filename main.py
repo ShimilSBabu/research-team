@@ -40,10 +40,11 @@ async def main(research_topic:str=""):
 
 
 if __name__ == "__main__":
+    import os
     uvicorn.run(
         app="main:app",
-        # host="127.0.0.1",
-        # port=8080,
+        host=os.getenv("FASTAPI_HOST", "127.0.0.1"),
+        port=os.getenv("FASTAPI_PORT",8080),
         # use_colors=True,
         # reload=True
     )
