@@ -227,3 +227,4 @@ logs/*
 *.ipynb
 # */credentials.json
 # */token.json
+personal.md
