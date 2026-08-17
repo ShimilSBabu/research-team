@@ -7,15 +7,19 @@ from src.agents.display_agent import display_node
 from src.conditional_edges import dispatch_researchers, critic_decision
 from src.state import AgentState
 
+from time import perf_counter
 from langgraph.graph import StateGraph, START, END
 from logging import getLogger
 
 logger=getLogger(__name__)
 
 def build_graph():
+    logger.info(msg="Building the graph.")
+    start_time=perf_counter()
     graph_builder=StateGraph(AgentState)
 
     # Defining the nodes
+    logger.info(msg="Adding the nodes.")
     graph_builder.add_node(node="decomposer", action=decomposer_node)
     graph_builder.add_node(node="researcher", action=researcher_node)
     graph_builder.add_node(node="fact_checker", action=fact_checker_node)
@@ -25,6 +29,7 @@ def build_graph():
 
 
     # Defining the edges
+    logger.info(msg="Creating the connections.")
     graph_builder.add_edge(START, "decomposer")
     graph_builder.add_conditional_edges(
         source="decomposer", 
@@ -47,6 +52,8 @@ def build_graph():
     graph_builder.add_edge("display", END)
 
     # Compiling the graph
+    logger.info(msg="Compiling the graph.")
     graph=graph_builder.compile()
-
+    latency = perf_counter() - start_time
+    logger.info(msg=f"Graph built successfully. Latency: {latency:.6f} seconds.")
     return graph

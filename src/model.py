@@ -1,7 +1,7 @@
 from langchain_mistralai import ChatMistralAI
 from dotenv import load_dotenv
 import os
-from time import sleep
+from time import sleep, perf_counter
 from pydantic import BaseModel
 from langgraph.graph import StateGraph, START, END
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, BaseMessage
@@ -45,6 +45,7 @@ reviewer_llm=get_specialized_llm(temperature=0.0)
 # --------------------------------------------------------------------------------------------------------------------------------------
 async def _get_llm_responce(messages, api_key, model, temperature, structured_output=""):
     logger.debug(msg="Connecting to the LLM.")
+    start_time=perf_counter()
     try:
         llm = ChatMistralAI(
             model=model,
@@ -62,7 +63,8 @@ async def _get_llm_responce(messages, api_key, model, temperature, structured_ou
 
         logger.debug(msg="Attempting to generate the response.")
         response = await llm.ainvoke(messages)
-        logger.debug(msg=f"Response ({type(response)}) generated.\n{response}")
+        latency = perf_counter() - start_time
+        logger.debug(msg=f"Response ({type(response)}) generated. Latency: {latency:.6f} seconds.\n{response}")
         return {"status":1,"content":response.content}
     except Exception as e:
         logger.exception(msg="Response generation failed.")
@@ -71,7 +73,7 @@ async def _get_llm_responce(messages, api_key, model, temperature, structured_ou
 
 async def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose=__name__, structured_output=""):
     logger.info(msg=f"\nGetting LLM response for {llm_purpose}.")
-
+    start_time=perf_counter()
     retry_count=0
     response=0
     
@@ -96,7 +98,8 @@ async def call_llm(messages, temperature=0.3, max_retries=15, llm_purpose=__name
                                       )
             
             if response["status"]:
-                logger.info(msg="LLM returing the response")
+                latency = perf_counter() - start_time
+                logger.info(msg=f"LLM returing the response. Latency: {latency:.6f} seconds.")
                 return response
             retry_count += 1
         logger.debug(msg="LLM sleeping for 5 seconds.")

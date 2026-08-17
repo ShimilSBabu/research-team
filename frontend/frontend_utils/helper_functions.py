@@ -1,3 +1,5 @@
+from frontend_utils.config import GMAIL_CREDENTIALS_PATH, GMAIL_TOKEN_PATH
+
 from io import BytesIO
 
 import markdown
@@ -251,8 +253,8 @@ SCOPES = [
 
 
 def get_gmail_service(
-    credentials_file: str = os.getenv("GMAIL_CREDENTIALS_PATH", os.path.join("frontend", "credentials.json")),
-    token_file: str = os.getenv("GMAIL_TOKEN_PATH", os.path.join("frontend", "token.json"))
+    credentials_file: str = GMAIL_CREDENTIALS_PATH,
+    token_file: str = GMAIL_TOKEN_PATH
 ):
     creds = None
 

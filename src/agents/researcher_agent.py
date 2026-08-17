@@ -2,6 +2,7 @@ from src.prompt_factory.prompt_manager import get_prompt
 from src.model import call_llm
 from src.tools import web_search
 
+from time import perf_counter
 from langchain_core.messages import SystemMessage, HumanMessage
 from logging import getLogger
 import json
@@ -10,6 +11,7 @@ logger=getLogger(__name__)
 
 async def researcher_node(state:dict):
     logger.info(msg="Initializing researcher node.")
+    start_time=perf_counter()
     try:
         researcher_id=state["researcher_id"]
         research_topic=state["research_topic"]
@@ -53,7 +55,8 @@ async def researcher_node(state:dict):
             "websearch_result":concise_web_results["content"]
         }
 
-        logger.info(msg=f"Researcher [{researcher_id}] => Research successful for sub-topic: {research_sub_topic!a}.\nresearch_result\n{research_result}")
+        latency = perf_counter() - start_time
+        logger.info(msg=f"Researcher [{researcher_id}] => Research successful for sub-topic: {research_sub_topic!a}. Latency: {latency:.6f} seconds.\nresearch_result\n{research_result}")
         return {
             "researcher":{
                 "completed_tasks":[research_sub_topic],
@@ -61,7 +64,7 @@ async def researcher_node(state:dict):
             }
         }
     except:
-        logger.exception(msg=f"Researcher [{researcher_id}] => Research failed for sub-topic: {research_sub_topic!a}.")
+        logger.exception(msg=f"Researcher [{researcher_id}] => Research failed for sub-topic: {research_sub_topic!a}. Latency: {latency:.6f} seconds.")
         return {
                 "researcher":{
                     "failed_tasks":[research_sub_topic]

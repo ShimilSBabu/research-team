@@ -2,6 +2,7 @@ from src.model import call_llm
 from src.state import AgentState, WriterState
 from src.prompt_factory.prompt_manager import get_prompt
 
+from time import perf_counter
 import json
 from langchain_core.messages import SystemMessage, HumanMessage
 from logging import getLogger
@@ -10,6 +11,7 @@ logger=getLogger(__name__)
 
 async def writer_node(state:AgentState):
     logger.info(msg="Initializing writer node.")
+    start_time=perf_counter()
     research_topic=state.query.query
     logger.info(msg="Collecting the research report.")
     research_results_list=[]
@@ -30,7 +32,8 @@ async def writer_node(state:AgentState):
     ]
     logger.info(msg="Writing the draft report.")
     draft_report=await call_llm(messages=messages, structured_output=WriterState, temperature=0.5, llm_purpose="Writer Agent")
-    logger.info(msg=f"Draft report generated.\n{draft_report["content"]}")
+    latency = perf_counter() - start_time
+    logger.info(msg=f"Draft report generated. Latency: {latency:.6f} seconds.\n{draft_report["content"]}")
 
     return {
         "writer": draft_report["content"]
