@@ -228,3 +228,4 @@ logs/*
 # */credentials.json
 # */token.json
 personal.md
+*trial.*
