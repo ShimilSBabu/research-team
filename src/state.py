@@ -14,7 +14,7 @@ from src.utils.config import CRITIC_MAX_ITERATION
 #     merged.update(right or {})
 #     return merged
 
-def researcherstate__merge(researcherstate_1:ResearcherState, researcherstate_2:dict):
+def researcherstate_merge(researcherstate_1:ResearcherState, researcherstate_2:dict):
     merged_researcherstate=researcherstate_1.model_copy(deep=True)
     if "completed_tasks" in researcherstate_2.keys():
         merged_researcherstate.completed_tasks=operator.add(merged_researcherstate.completed_tasks, researcherstate_2["completed_tasks"])
@@ -24,6 +24,13 @@ def researcherstate__merge(researcherstate_1:ResearcherState, researcherstate_2:
         merged_researcherstate.failed_tasks=operator.add(merged_researcherstate.failed_tasks, researcherstate_2["failed_tasks"])    
     return merged_researcherstate
 
+def streaming_display_merge(input_1:str|list, input_2:str|list):
+    if isinstance(input_2, str):
+        return input_2
+    if isinstance(input_1, str):
+        return input_2
+    input_1.extend(input_2)
+    return input_1
 
 class QueryState(BaseModel):
     query:str=Field(description="User query", default="")
@@ -101,7 +108,7 @@ class AgentState(BaseModel):
     query:QueryState=Field(description="Query from user.", default_factory=QueryState)
 
     decomposer:DecomposerState=Field(default_factory=DecomposerState)
-    researcher:Annotated[ResearcherState, researcherstate__merge]=Field(default_factory=ResearcherState)
+    researcher:Annotated[ResearcherState, researcherstate_merge]=Field(default_factory=ResearcherState)
     fact_checker:FactCheckerState=Field(default_factory=FactCheckerState)
     critic:CriticState=Field(default_factory=CriticState)
     writer:WriterState=Field(default_factory=WriterState)
@@ -109,3 +116,5 @@ class AgentState(BaseModel):
 
     human_feedback:list=Field(description="The human feedback.", default="")
     response:ResponseState=Field(description="Final response to the user.", default_factory=ResponseState)
+
+    streaming_display:Annotated[list|str, streaming_display_merge]=Field(description="The value of this fied will be streamed as state updates to the frontend.", default="")

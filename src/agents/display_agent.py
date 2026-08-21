@@ -2,6 +2,7 @@ from src.state import AgentState
 
 from time import perf_counter
 from logging import getLogger
+import json
 
 logger=getLogger(__name__)
 
@@ -17,11 +18,14 @@ async def display_node(state:AgentState):
             "response":{
                 "status":True,
                 "content":research_report,
-                }
+                },
+            # "streaming_display":json.dumps(research_report)
+            "streaming_display":research_report
         }
     logger.info(msg="Research failed.")
     return {
             "response":{
                 "status":False
-                }
+                },
+            "streaming_display":"Research failed."
         }

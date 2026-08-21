@@ -23,7 +23,13 @@ async def decomposer_node(state:AgentState):
     logger.info(msg=f"Decomposed task list generated.\n{decomposed_task_list["content"]}")
     latency = perf_counter() - start_time
     logger.info(msg=f"Decomposed Task List. Latency: {latency:.6f} seconds\n{decomposed_task_list}")
-
+    stream_task_list="\n- ".join(decomposed_task_list["content"].tasks)
+    streaming_display=f'''##### Decomposed Task List.
+\n- {stream_task_list}
+    Latency: {latency:.6f}
+##### Researcher agent starting reasearch..'''
+    logger.debug(msg=f"Streaming display generated.\n{streaming_display}")
     return {
-        "decomposer": decomposed_task_list["content"]
+        "decomposer": decomposed_task_list["content"],
+        "streaming_display": streaming_display
         }

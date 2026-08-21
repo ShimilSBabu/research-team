@@ -31,13 +31,22 @@ async def fact_checker_node(state:AgentState):
     latency = perf_counter() - start_time
     if response["status"]:
         logger.info(msg=f"Fact check successful. Latency: {latency:.6f} seconds.\nFact Check Report\n{fact_check_report}")
-        return {"fact_checker":fact_check_report}
+        streaming_display=f'''##### Facts checked.
+    Latency: {latency:.6f} seconds
+##### Writing the draft report..'''
+        return {
+            "fact_checker":fact_check_report,
+            "streaming_display":streaming_display
+            }
     else:
+        streaming_display=f'''##### Fact check failed.
+    Latency: {latency:.6f} seconds'''
         logger.critical(msg=f"Fact check unsuccessful. Latency: {latency:.6f} seconds.\nFact Check Report\n{fact_check_report}")
         return {
             "fact_checker":{
                 "fact_check_log": {
                     "single_line_log":fact_check_report
                 }
-            }
+            },
+            "streaming_display":streaming_display
         }

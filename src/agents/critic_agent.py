@@ -25,14 +25,23 @@ async def critic_node(state:AgentState):
     ]
     logger.info(msg="Generating critic report.")
     critic_response=await call_llm(messages=messages, structured_output=CriticReport, llm_purpose="Critic Agent", temperature=0.0)
+    critic_score=critic_response["content"].critic_score
     latency = perf_counter() - start_time
     logger.info(msg=f"Critic report generated. Latency: {latency:.6f} seconds\n{critic_response["content"]}")
+    if critic_score<0.5:
+        critic_verdict="Draft report unsatisfactory. Rewriting draft report."
+    else:
+        critic_verdict="Draft report found satisfactory.\nDisplaying final report..."
+    streaming_display=f'''##### Critic inspection finished.
+    Latency: {latency:.6f} seconds
+##### {critic_verdict}'''
     return {
         "critic":{
             "critic_report": {
                 "critic_feedback":critic_response["content"].critic_feedback,
-                "critic_score":critic_response["content"].critic_score
+                "critic_score":critic_score
             },
             "critic_iteration_count": critic_iteration_count+1
         },
+        "streaming_display":streaming_display
     }

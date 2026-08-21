@@ -229,3 +229,4 @@ logs/*
 # */token.json
 personal.md
 *trial.*
+*.tex

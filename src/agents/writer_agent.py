@@ -34,7 +34,10 @@ async def writer_node(state:AgentState):
     draft_report=await call_llm(messages=messages, structured_output=WriterState, temperature=0.5, llm_purpose="Writer Agent")
     latency = perf_counter() - start_time
     logger.info(msg=f"Draft report generated. Latency: {latency:.6f} seconds.\n{draft_report["content"]}")
-
+    streaming_display=f'''##### Draft report generated.
+    Latency: {latency:.6f} seconds
+##### Critic analysing the report..'''
     return {
-        "writer": draft_report["content"]
+        "writer": draft_report["content"],
+        "streaming_display":streaming_display
     }

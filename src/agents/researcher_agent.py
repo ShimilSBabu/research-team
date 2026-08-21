@@ -57,16 +57,25 @@ async def researcher_node(state:dict):
 
         latency = perf_counter() - start_time
         logger.info(msg=f"Researcher [{researcher_id}] => Research successful for sub-topic: {research_sub_topic!a}. Latency: {latency:.6f} seconds.\nresearch_result\n{research_result}")
+        streaming_display=f'''##### Research successful for sub-topic: {research_sub_topic!a}.
+###### Researcher [{researcher_id}]
+    Latency: {latency:.6f} seconds
+##### Fact checking will begin as soon as all researchers submit their findings.. '''
         return {
             "researcher":{
                 "completed_tasks":[research_sub_topic],
                 "research_results":[research_result]
-            }
+            },
+            "streaming_display":[streaming_display]
         }
     except:
+        streaming_display=f'''### Research failed for sub-topic: {research_sub_topic!a}.
+        #### Researcher [{researcher_id}]
+        #### Latency: {latency:.6f} seconds'''
         logger.exception(msg=f"Researcher [{researcher_id}] => Research failed for sub-topic: {research_sub_topic!a}. Latency: {latency:.6f} seconds.")
         return {
                 "researcher":{
                     "failed_tasks":[research_sub_topic]
-                }
+                },
+                "streaming_display":[streaming_display]
             }
