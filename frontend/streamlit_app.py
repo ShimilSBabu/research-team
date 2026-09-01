@@ -10,7 +10,7 @@ host="http://127.0.0.1"
 # https://research-team-fzt6.onrender.com/
 host=os.getenv("RENDER_HOST", "https://research-team-fzt6.onrender.com/")
 port=os.getenv("RENDER_PROT", "8080")
-RECEIVER_EMAIL_ID=os.getenv("RECEIVER_EMAIL_ID","aksharamohanan09+TheAgenticResearchTeam@gmail.com")
+RECEIVER_EMAIL_ID=os.getenv("RECEIVER_EMAIL_ID","")
 print(f'RECEIVER_EMAIL_ID ({type(RECEIVER_EMAIL_ID)}): {RECEIVER_EMAIL_ID}')
 
 # port="8080"
