@@ -98,9 +98,9 @@ copy .env.example .env
 Then edit `.env` and provide at least:
 
 ```env
-MISTRAL_API_KEY=""
-MISTRAL_API_KEY_EJ=""
-MISTRAL_AUTONOMOUS_API_KEY=""
+MISTRAL_API_KEY_1=""
+MISTRAL_API_KEY_2=""
+MISTRAL_API_KEY_3=""
 TRAVILY_API_KEY=""
 ```
 
