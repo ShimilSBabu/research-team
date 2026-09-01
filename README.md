@@ -60,11 +60,18 @@ Key benefits:
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/ShimilSBabu/research-team.git
 cd research_team
 ```
 
 ### 2. Create and activate a virtual environment
+
+
+```bash
+uv sync
+```
+
+or
 
 ```bash
 python -m venv .venv
